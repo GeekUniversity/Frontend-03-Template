@@ -1,50 +1,25 @@
-const match = (string) => {
-  let state = start;
-  for (let c of string) {
-    state = state(c);
+// 使用状态机完成”abababx”的处理
+
+const match = (str) => {
+    let state = start
+    for(let c of str){
+      state = state(c)
+    }
+    return state === end                
   }
-  return state === end;
-};
-const start = (c) => { 
-    if (c === "a") return foundA(c);
-    else return start(c);
-}
-const end = (c) => end;
-const foundA = (c) => {
-  if (c === "b") return foundB(c);
-  else return start(c);
-};
-const foundB = (c) => {
-  if (c === "a") return foundA2(c);
-  else return foundA(c);
-};
-const foundA2 = (c) => {
-  if (c === "b") return foundB2(c);
-  else return foundB(c);
-};
-const foundB2 = (c) => {
-  if (c === "a") return foundA3(c);
-  else return foundA2(c);
-};
-const foundA3 = (c) => {
-  if (c === "b") return foundB3(c);
-  else return foundB2(c);
-};
-const foundB3 = (c) => {
-  if (c === "x") return end;
-  else return foundA3(c);
-};
 
+  const start = c => c ==='a'? foundA:start
+  const end = () => end
+  const foundA = c => c ==='b'? foundB : start(c) 
+  const foundB = c => c ==='a'? foundA2 : start(c)  
+  const foundA2 = c => c ==='b'? foundB2 : start(c) 
+  const foundB2 = c => c ==='a'? foundA3 : start(c)  
+  const foundA3 = c => c ==='b'? foundX : start(c)  
+  const foundX = c => c === 'x'? end : foundB2(c)   
 
-// test
-console.log(match("abababx"));
-console.log(match("ababababx"));
-console.log(match("abababababx"));
-console.log(match("abababababababx"));
-console.log(match("ababababababx"));
-console.log(match("ababacabababx"));
-console.log(match("ababaabababx"));
-console.log(match("ababaababx"));
-console.log(match("ababaababx"));
-console.log(match("ababacbabx"));
-console.log(match("ababaaabababbabababx"));
+  console.log(match('ababababx'))
+  console.log(match('abaaabababx'))
+  console.log(match('abababaabababx'))
+  console.log(match('abababaabaababx'))
+
+  //reconsume 重组技巧
