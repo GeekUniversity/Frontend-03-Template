@@ -1,17 +1,16 @@
-// 0.导入需要的资源包
+// 导入koa，和koa 1.x不同，在koa2中，我们导入的是一个class，因此用大写的Koa表示:
 const Koa = require('koa');
+
+// 创建一个Koa对象表示web app本身:
 const app = new Koa();
-const route = require('koa-route');
-const serve = require('koa-static');
 
-// 1.主页静态网页 把静态页统一放到public中管理
-const home   = serve(path.join(__dirname)+'/public/');
-// 2.hello接口
-const hello = ctx => {
-  ctx.response.body = 'Hello World';
-};
+// 对于任何请求，app将调用该异步函数处理请求：
+app.use(async (ctx, next) => {
+    await next();
+    ctx.response.type = 'text/html';
+    ctx.response.body = '<h1>Hello, koa2!</h1>';
+});
 
-// 3.分配路由
-app.use(home); 
-app.use(route.get('/', hello));
+// 在端口3000监听:
 app.listen(3000);
+console.log('app started at port 3000...');
