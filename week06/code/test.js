@@ -593,12 +593,15 @@ const run = async() => {
         console.log(standard.name);
         await sleep(1000)
         await happen(iframe,"load");
-        let str = iframe.contentDocument.querySelectorAll(".dfn-paneled")
+        let str = iframe.contentDocument.querySelectorAll(".dfn-paneled.css")
 
+       
         for(let s of str){
-            if(s.getAttribute('data-dfn-type')==='property'){
-                console.log(s);
-            }
+            console.log(s);
+            // console.log(s.getAttribute('data-dfn-type')==='property');
+            // // if(s.getAttribute('data-dfn-type')==='property'){
+            // //     console.log(s);
+            // // }
         }
         console.log(str.length);
     }
