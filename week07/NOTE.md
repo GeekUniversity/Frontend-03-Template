@@ -247,9 +247,152 @@ HTML5 中的新语义元素
 18. writeln()
 
 
-#### 5. 浏览器API | 事件API         
-#### 6. 浏览器API | Range API         
-#### 7. 浏览器API | CSSOM         
-#### 8. 浏览器API | CSSOM View         
-#### 9. 浏览器API | 其它API         
+
+
+### 5. 浏览器API | 事件API 
+#### target.addEventListener(type,littener,
+>target.addEventListener(type, listener, options);
+target.addEventListener(type, listener, useCapture);
+target.addEventListener(type, listener, useCapture, wantsUntrusted  );  // Gecko/Mozilla only
+参数
+##### type
+    表示监听事件类型的字符串。
+##### listener
+    当所监听的事件类型触发时，会接收到一个事件通知（实现了 Event 接口的对象）对象。listener 必须是一个实现了 EventListener 接口的对象，或者是一个函数。有关回调本身的详细信息，请参阅The event listener callback 
+##### options 可选
+    一个指定有关 listener 属性的可选参数对象。可用的选项如下：
+    capture:  Boolean，表示 listener 会在该类型的事件捕获阶段传播到该 EventTarget 时触发。
+    once:  Boolean，表示 listener 在添加之后最多只调用一次。如果是 true， listener 会在其被调用之后自动移除。
+    passive: Boolean，设置为true时，表示 listener 永远不会调用 preventDefault()。如果 listener 仍然调用了这个函数，客户端将会忽略它并抛出一个控制台警告。查看 使用 passive 改善的滚屏性能 了解更多.
+     mozSystemGroup: 只能在 XBL 或者是 Firefox' chrome 使用，这是个 Boolean，表示 listener 被添加到 system group。
+##### useCapture  可选
+    Boolean，在DOM树中，注册了listener的元素， 是否要先于它下面的EventTarget，调用该listener。 当useCapture(设为true) 时，沿着DOM树向上冒泡的事件，不会触发listener。当一个元素嵌套了另一个元素，并且两个元素都对同一事件注册了一个处理函数时，所发生的事件冒泡和事件捕获是两种不同的事件传播方式。事件传播模式决定了元素以哪个顺序接收事件。进一步的解释可以查看 事件流 及 JavaScript Event order 文档。 如果没有指定， useCapture 默认为 false 。 
+
+#### Event:冒泡和捕获
+
+### ★★★★★ 6. 浏览器API | Range API 
+
+★★★★★ Range 构造器 
+new Range()使用 
+★★★★★ fragment
+#### 属性
+|属性名|描述|
+|-|-|
+|Range.collapsed 只读|返回一个表示 Range 的起始位置和终止位置是否相同的布尔值。
+|Range.commonAncestorContainer 只读|返回完整包含 startContainer 和 endContainer 的、最深一级的节点。
+|Range.endContainer 只读|返回包含 Range 终点的节点。
+|Range.endOffset 只读|返回一个表示 Range 终点在 endContainer 中的位置的数字。
+|Range.startContainer 只读|返回包含 Range 开始的节点。
+|Range.startOffset 只读|返回一个表示 Range 起点在 startContainer 中的位置的数字。
+
+
+#### 定位方法
+|方法|描述|
+|-|-|
+|Range.setStart()|设置 Range 的起点。
+|Range.setEnd()|设置 Range 的终点。
+|Range.setStartBefore()|以其它节点为基准，设置 Range 的起点。
+|Range.setStartAfter()|以其它节点为基准，设置 Range 的起点。
+|Range.setEndBefore()|以其它节点为基准，设置 Range 的终点。
+|Range.setEndAfter()|以其它节点为基准，设置 Range 的终点。
+|Range.selectNode()|使 Range 包含某个节点及其内容。
+|Range.selectNodeContents()|使 Range 包含某个节点的内容。
+|Range.collapse()|将 Range 折叠至其端点（boundary points，起止点，指起点或终点，下同）之一。
+
+#### 编辑方法
+通过以下方法，可以从 Range 中获得节点，改变 Range 的内容。
+|方法|描述|
+|-|-|
+|Range.cloneContents()|返回一个包含 Range 中所有节点的文档片段。
+|Range.deleteContents()|从文档中移除 Range 包含的内容。
+|Range.extractContents()|把 Range 的内容从文档树移动到一个文档片段中。
+|Range.insertNode()|在 Range 的起点处插入一个节点。
+|Range.surroundContents()|将 Range 的内容移动到一个新的节点中。
+
+#### 其他方法
+|方法|描述|
+|-|-|
+|Range.compareBoundaryPoints()|比较两个 Range 的端点。
+|Range.cloneRange()|返回拥有和原 Range 相同的端点的克隆 Range 对象。
+|Range.detach()|将 Range 从使用状态中释放，改善性能。
+|Range.toString()|把 Range 的内容作为字符串返回。
+
+![9a751c5cb42aa39cce8f1d2ddf11bc0a.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5095)
+![2522373234cdb0579abb7203db1c63dd.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5096)
+![76df486de257630bbd98cfa24f8fb8b8.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5097)
+```html
+<!--请把a里面的子元素倒序-->
+<div id='a'>
+    <span>1</span>
+    <p>2</p>
+    <a>3</a>
+    <div>4</div>
+</div>
+<!--普通方法-->
+<script>
+let element = document.getElementById("a")
+function  reverseChildren(element){
+    let children = Array.protoype.slice.call(element.childNodes)
+    for(let child of children){
+        element.removeChild(child)
+    }
+    // element.innerHTML=""
+    children.reverse()
+    for(let child of children){
+        element.appendChild(child)
+    }
+    
+}
+reverseChildren(element);
+</script>
+<!--次优方法-->
+<script>
+let element = document.getElementById("a")
+function  reverseChildren(element){
+    var l = element.childNodes.length;
+    while(l-- >0){
+        element.appendChild(element.childNodes[l])
+    }
+}
+reverseChildren(element);
+</script>
+<!--使用 Range 性能最优-->
+<script>
+let element = document.getElementById("a")
+function  reverseChildren(element){
+    let range = new Range();
+    range.selectNodeContents(element);
+    
+    let fragment = range.extractContents();
+    var l = fragment.childNodes.length;
+    while(l-- >0){
+        fragment.append(fragment.childNodes[l])
+    }
+    element.appendChild(fragment); 
+}
+reverseChildren(element);
+</script>
+```
+
+
+
+### 7. 浏览器API | CSSOM  
+#### styleSheets
+    document.styleSheets[0].cssRules
+    document.styleSheets[0].insertRule("p {color:pink;},0)
+    document.styleSheets[0].removeRule(0)
+![c1fd04430dd4f29a29c79d87264f70f4.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5100)
+![2b60b709b09a972bce74ae62a76771c0.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5101)
+#### ★★★★ getComputedStyle()方法可以获取CSS3动画的任意运行时态，从而任意时间中断动画。。。
+ 
+### 8. 浏览器API | CSSOM View  
+![6effd66bc934aae0a0ce24c72edb6c2c.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5103)
+![7e4393dbc45cb47ab5e362f1c0cfff69.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5104)
+![00f2a468e6490b50af5514a0a59407d9.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5105)
+![3d4cf56b121a26f80a71f969d70c80c5.png](evernotecid://2393A90F-1FE0-42B1-A655-82D09E31A7AF/appyinxiangcom/307379/ENResource/p5106)
+#####★★ DPR window.devicedPixelRatio window.innerHeight
+####★★★★★ element.getClientRects() //获取BFC
+####★★★★ getBoundingClientRect() //获取BFC
+### 9. 浏览器API | 其它API         
+           
     
