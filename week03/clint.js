@@ -22,7 +22,7 @@ class Request{
     }
     send(connection){
         return new Promise((resolve,reject)=>{
-            const parser = new ResponseParser;
+            const parser = new ResponseParser()
             if(connection){
                 connection.write(this.toString())
             }else{
@@ -34,8 +34,9 @@ class Request{
                 })
             }
             //监听 data
-            connection.on('data',(data)=>{ 
-                console.log(data.toString());
+            connection.on('data', (data) => { 
+                console.log('connection.on',data.toString(), parser, connection.on('data'))
+                console.log('connection.on', data.toString());
                 parser.receive(data.toString())
                 if(parser.isFinshed){
                     resolve(parser.response)
@@ -50,13 +51,13 @@ class Request{
     }
     toString(){
         return `${this.method} ${this.path} HTTP1.1\r
-            ${Object.keys(this.headers).map(key=>{ `${key}: ${this.headers[key]}`}).join('\r\n')} \r
-        \r
-        ${this.bodyText}`
+${Object.keys(this.headers).map(key =>`${key}: ${this.headers[key]}`).join('\r\n')}\r
+\r
+${this.bodyText}`
     }
 }
 
-class ResponseParser{
+class ResponseParser {
     constructor(){
         this.WAITING_STATUS_LINE = 0
         this.WAITING_STATUS_LINE_END = 1
@@ -203,7 +204,13 @@ void async function(){
             ["X-Foo2"]:"customed"
         },
         body:{
-            name:"omiomi"
+            name:"omiomi",
+            age:37,
+            child:[
+                {name:"pingping"},
+                {name:"anan"},
+                {name:"jiajia"},
+            ]
         }
     })
     const response = await request.send()
