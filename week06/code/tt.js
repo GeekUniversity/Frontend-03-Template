@@ -1,0 +1,4 @@
+
+
+
+// Object.getPrototypeOf(a)
