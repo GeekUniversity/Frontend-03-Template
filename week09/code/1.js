@@ -1,27 +1,25 @@
-class T{
+class T extends Array{
     constructor(...p){
-        // console.log(p);
-        new.target = [...p]
-        // this.list = [...p]
-        // this.add=(...p2)=>{
-        //     this.list = [...this.list,...parm]
-        //  }
-        // return this.list
-        return [...this.list]
-        // new.target = this.list
+        super()
+        for(let i =0;i<p.length; i++){
+            this[i]=p[i]
+        }
     }
     add(...parm) {
-        this.list = [...this.list,...parm]
+        for(let i =0;i<parm.length; i++){
+            this.push(parm[i])
+        }
     }
-    get length() { return this.list.length }
-    [Symbol.iterator](){
-        return this.list.entries()
-    }
-   
+    get length() { return this.length }
 }
 
-let a = new T('a','b')
-a.add('c','d')
+let a = new T('a','b','c')
+console.log(a)
+
+a.add('d','e')
+a.push('f')
+a.unshift('0')
+a.pop()
 console.log(a,a.length); 
 for(let b of a){
     console.log(b);
