@@ -1,27 +1,44 @@
-const sort = (arr,k1,k2)=>{
-    let res = []
-    let [i,j] = [0,arr.length-1]
-    while(i<=j){
-        if(arr[i][k1]>arr[j][k1]){
-            res.unshift(arr[i])
-            i++
-            continue;
-        }else if(arr[i][k1]==arr[j][k1]&&arr[i][k2]>arr[j][k2]){
-            res.unshift(arr[i])
-            i++ 
-            [arr[i],arr[j]]=[arr[j],arr[i]]
 
-            continue;
-        }else{
-            res.push(arr[j])
-            j--;
-            [arr[i],arr[j]]=[arr[j],arr[i]]
-            continue;
+// 对象数组排序
+const sort = (arr,k1,k2,k3)=>{
+    const merge = (left,right)=>{
+        let result = [];
+        while (left.length > 0 && right.length > 0) {
+            if (left[0][k1] > right[0][k1]) {
+                result.push(left.shift());
+            } else if(left[0][k1] == right[0][k1]){
+                if(left[0][k2] > right[0][k2]){
+                    result.push(left.shift());
+                }else if(left[0][k2] == right[0][k2]){
+                    if(left[0][k3] > right[0][k3]){
+                        result.push(left.shift());
+                    }else{
+                        result.push(right.shift());
+                    }
+                }else{
+                    result.push(right.shift());
+                }
+            } else {
+                result.push(right.shift());
+            }
         }
-        
+    
+        while (left.length) result.push(left.shift());
+        while (right.length) result.push(right.shift());
+    
+        return result;
+   }
+   const  mergesort = (seq)=>{
+        let len = seq.length;
+        if (len < 2) return seq;
+        let mid = Math.floor(len / 2);
+        let left = seq.slice(0, mid);
+        let right = seq.slice(mid);
+    
+        return merge(mergesort(left), mergesort(right));
     }
-    return arr
+    return mergesort(arr)
 }
 
-const arr = [{a:12,b:3,c:11},{a:13,b:2,c:10},{a:13,b:3,c:10}]
-console.log(sort(arr,'a','b'));
+const arr = [{a:13,b:3,c:11},{a:13,b:4,c:10},{a:13,b:3,c:10}]
+console.log(sort(arr,'a','b','c'));

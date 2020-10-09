@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      .main{
+        display: grid;
+        grid-template-rows: 100px  auto 80px;
+        width: 100%;
+      }
+      .head, .foot{
+        background: blue;
+        width: 100%;
+      }
+      .body{
+        display: grid;
+        grid-template-columns: 200px  auto 200px;
+        background: green;
+        height: 1300px;
+      }
+      .b{
+        background: red;
+      }
+      .d{
+        background: gray;
+        
+      }
+    </style>
+  </head>
+  <body >
+   
+    <div class="main" >
+      <div class="head" >A</div>
+      <div class="body" >
+        <div class="b"> B</div>
+        <div>C</div>
+        <div class="d">D</div>
+      </div>
+      <div class="foot" >
+
+      </div>
+    </div>
+    
+  </body>
+</html>
