@@ -1,0 +1,1 @@
+(()=>{for(var e=React.createElement("div",null),l=0,o=[1,2,3];l<o.length;l++){var n=o[l];console.log(n),console.log(e)}})();
