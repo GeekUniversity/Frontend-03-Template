@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='referrer' content='always'>
+    <meta name='keywords' content=''>
+    <meta name='description' content=''>
+    <meta name='renderer' content='webkit'>
+    <meta http-equiv=widow-target Content=_top>
+    <meta name='viewport' content='width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no, shrink-to-fit=no' viewport-fit=cover />
+    <meta http-equiv='X-UA-Compatible' content='ie=edge,chrome=1'>
+    <title></title>
+    <style>
+         *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            -webkit-tap-highlight-color:transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div id='root'></div> -->
+    <div id='dragable' style="width: 100px; height: 100px; background-color: pink;"></div>
+</body>
+<script >
+    let dragable = document.getElementById('dragable')
+    let baseX = 0, baseY = 0
+    dragable.addEventListener('mousedown',function(event){
+        let startX = event.clientX,startY = event.clientY
+        let up = event => {
+            baseX = baseX + event.clientX - startX
+            baseY = baseY + event.clientY - startY
+            dragable.removeEventListener('mousemove',move)
+            dragable.removeEventListener('mouseup',up)
+        }
+        let move = event =>{
+            dragable.style.transform = `translate(${baseX + event.clientX - startX}px,${baseY + event.clientY - startY}px)`
+        }
+        document.addEventListener('mousemove',move)
+        document.addEventListener('mouseup',up)
+    })
+    
+</script>
+</html>
