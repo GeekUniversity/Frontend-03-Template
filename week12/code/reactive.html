@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='referrer' content='always'>
+    <meta name='keywords' content=''>
+    <meta name='description' content=''>
+    <meta name='renderer' content='webkit'>
+    <meta http-equiv=widow-target Content=_top>
+    <meta name='viewport' content='width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no, shrink-to-fit=no' viewport-fit=cover />
+    <meta http-equiv='X-UA-Compatible' content='ie=edge,chrome=1'>
+    <script>
+        let reactivities = new Map();
+        let cbs = new Map();
+        let usedReactivities = [];
+
+        function reactive(obj) {
+            if (reactivities.has(obj)) return reactivities.get(obj);
+
+            let proxied = new Proxy(obj, {
+                set(obj, prop, val) {
+                    obj[prop] = val; //alter the orignal object directly
+                    fireReactivityEvent(obj, prop);
+                    return obj[prop];
+                },
+                get(obj, prop) {
+                    usedReactivities.push([obj, prop]);
+
+                    if (typeof obj[prop] === 'object') {
+                        return reactive(obj[prop]);
+                    }
+
+                    return obj[prop];
+                }
+            });
+
+            reactivities.set(obj, proxied);
+            return proxied;
+        }
+
+        function effect(cb) {
+            usedReactivities = [];
+            cb();
+            console.log('u', usedReactivities);
+            for (let reactivity of usedReactivities) {
+                adjustGlobalCb(reactivity, cb);
+            }
+        }
+
+        function adjustGlobalCb(reactivity, callback) {
+            if (!cbs.has(reactivity[0])) {
+                cbs.set(reactivity[0], new Map());
+            }
+            if (!cbs.get(reactivity[0]).has(reactivity[1])) {
+                cbs.get(reactivity[0]).set(reactivity[1], []);
+            }
+            cbs
+                .get(reactivity[0])
+                .get(reactivity[1])
+                .push(callback);
+        }
+
+        function fireReactivityEvent(obj, prop) {
+            if (cbs.has(obj)) {
+                let prop_map = cbs.get(obj);
+                if (prop_map.has(prop)) {
+                    let dep_arr = prop_map.get(prop);
+                    dep_arr.forEach(cb => {
+                        typeof cb === 'function' && cb();
+                    });
+                }
+            }
+        }
+    </script>
+    <title>
+
+    </title>
+    <style>
+         *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            -webkit-tap-highlight-color:transparent;
+        }
+    </style>
+</head>
+<body>
+    <div id='root'>
+        <input id="r" type="range" min="0" max="255" />
+		<input id="g" type="range" min="0" max="255" />
+		<input id="b" type="range" min="0" max="255" />
+		<div id="color" style="width:111px;height:111px"></div>
+    </div>
+</body>
+<script type='text/typescript' defer>
+    let input_obj = {
+        r: 1,
+        g: 1,
+        b: 1
+    };
+
+    let po = reactive(input_obj);
+
+    //two way binding
+    Object.keys(input_obj).forEach(s => {
+        effect(() => (document.getElementById(s).value = po[s]));
+        document
+            .getElementById(s)
+            .addEventListener('input', e => (po[s] = e.target.value));
+    });
+
+    effect(
+        () =>
+            (document.getElementById(
+                'color'
+            ).style.backgroundColor = `rgb(${po.r},${po.g},${po.b})`)
+    );
+</script>
+</html>
